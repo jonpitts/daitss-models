@@ -15,7 +15,7 @@ class Package < Sequel::Model(:packages)
   #set default values
   def before_create
     super
-    self.uri ||= proc { |r,p| "info:fda/" + r.id }
+    self.uri ||= proc { |r,p| "info:fda/" + r.id } #will have issues
   end
   #save defaults to raise on save failure. false returns nil
   self.raise_on_save_failure = false 

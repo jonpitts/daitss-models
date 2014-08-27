@@ -13,7 +13,7 @@ unless DB.table_exists? (:aips)
     Text :xml, :null=>false
     Text :xml_errata
     Integer :datafile_count
-    foreign_key :package_id, :packages, :null=>false, :type='varchar(50)'
+    foreign_key :package_id, :packages, :null=>false, :type=>'varchar(50)'
   end
 end
 
