@@ -2,7 +2,7 @@
 
 unless DB.table_exists? (:packages)
   DB.create_table :packages do
-    EggHeadKey :id, :size=>50, :primary_key=>true
+    String :id, :size=>50, :primary_key=>true
     String :uri, :size=>50, :unique => true, :null=>false
     foreign_key :project_id, :projects, :type=>'varchar(50)', :null=>false
     foreign_key :project_account_id, :projects, :key=>:account_id, :type=>'varchar(50)', :null=>false
@@ -16,6 +16,12 @@ class Package < Sequel::Model(:packages)
   def before_create
     super
     self.uri ||= "info:fda/" + self.id 
+    #EggHeadKey
+    s = rand(DIGITS).to_s(36).upcase
+    s = s + "0" * (14 - s.length) # pad length to 14 chars if necesary
+    s.insert(8, "_")
+    s = 'E' + s
+    self.id ||= s
   end
   #save defaults to raise on save failure. false returns nil
   self.raise_on_save_failure = false 
