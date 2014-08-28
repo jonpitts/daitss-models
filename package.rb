@@ -4,8 +4,11 @@ unless DB.table_exists? (:packages)
   DB.create_table :packages do
     String :id, :size=>50, :primary_key=>true
     String :uri, :size=>50, :unique => true, :null=>false
+    index :uri, :unique=>true, :name=>:unique_packages_uri
     foreign_key :project_id, :projects, :type=>'varchar(50)', :null=>false
+    
     foreign_key :project_account_id, :projects, :key=>:account_id, :type=>'varchar(50)', :null=>false
+    index [:project_id, :project_account_id], :name=>:index_packages_project
   end
 end
 
