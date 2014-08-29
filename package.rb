@@ -6,7 +6,6 @@ unless DB.table_exists? (:packages)
     String :uri, :size=>50, :unique => true, :null=>false
     index :uri, :unique=>true, :name=>:unique_packages_uri
     foreign_key :project_id, :projects, :type=>'varchar(50)', :null=>false
-    
     foreign_key :project_account_id, :projects, :key=>:account_id, :type=>'varchar(50)', :null=>false
     index [:project_id, :project_account_id], :name=>:index_packages_project
   end
@@ -64,7 +63,7 @@ class Package < Sequel::Model(:packages)
   ]
 
   def self.search(id)
-    self.where(Sequel.like(:id,"%#{id}%"))
+    self.first(Sequel.like(:id,"%#{id}%"))
   end
   
   def normal_events
@@ -96,7 +95,7 @@ class Package < Sequel::Model(:packages)
   # make an event for this package
   def log name, options={}
     e = Event.new :name => name, :package => self
-    e.agent = options[:agent] || Program.get("SYSTEM")
+    e.agent = options[:agent] || Program["SYSTEM"]
     e.notes = options[:notes]
     e.timestamp = options[:timestamp] if options[:timestamp]
     unless e.save
