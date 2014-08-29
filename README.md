@@ -15,7 +15,7 @@ Currently attemping to migrate daitss models from DataMapper to Sequel.
    * create_table
  * Validations retained in model
 
-### External Plugins Requirements
+### External Plugin Required
  * gem 'sequel_enum'
  * gem 'sequel-bit_fields'
 
