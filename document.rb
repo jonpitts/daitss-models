@@ -10,13 +10,13 @@
   unless DB.table_exists? (:documents)
     DB.create_table :documents do
       primary_key :id
-      Integer :pageCount # total number of pages in the document
-      Integer :wordCount # total number of words in the document
-      Integer :characterCount # total number of characters in the document
-      Integer :paragraphCount # total number of paragraphs in the document
-      Integer :lineCount # total number of lines in the document
-      Integer :tableCount # total number of tables in the document
-      Integer :graphicsCount # total number of graphics in the document
+      Integer :pageCount, :name=>:page_count # total number of pages in the document
+      Integer :wordCount, :name=>:word_count # total number of words in the document
+      Integer :characterCount, :name=>:character_count # total number of characters in the document
+      Integer :paragraphCount, :name=>:paragraph_count # total number of paragraphs in the document
+      Integer :lineCount, :name=>:line_count # total number of lines in the document
+      Integer :tableCount, :name=>:table_count # total number of tables in the document
+      Integer :graphicsCount, :name=>:graphics_count # total number of graphics in the document
       String :language, :size=>128  # the natural language used in the document (language code)
       Integer :features #bit field
       foreign_key :datafile_id, :datafiles, :type=>'varchar(100)', :on_update=>:cascade, :on_delete=>:cascade
@@ -32,7 +32,7 @@
     def fromPremis premis
       self.pageCount = premis.find_first("doc:PageCount", NAMESPACES).content.to_i
       lang = premis.find_first("doc:Language", NAMESPACES)
-      self.language = lang.content) unless lang.nil
+      self.language = lang.content unless lang.nil
 
       # set all features associated with this document
       nodes = premis.find("doc:Features", NAMESPACES)
@@ -64,7 +64,7 @@
       primary_key :id
       String :fontname, :size=>255 # the name of the font
       TrueClass :embedded # where or not the font is embedded in the document
-      foreign_key :document_id, :null=>false, :type=>'integer', :on_update=>:cascade, :on_delete=>:cascade
+      foreign_key :document_id, :documents, :null=>false, :type=>'integer', :on_update=>:cascade, :on_delete=>:cascade
       index :document_id, :name=>:index_fonts_document
     end
   end
