@@ -7,7 +7,7 @@ end
 
 class Batch < Sequel::Model(:batches)
   one_to_many :batch_assignments
-  many_to_many :packages, :through => :batch_assignments
+  many_to_many :packages, :join_table => :batch_assignments # has_many :packages, :through=>:batch_assignments
 end
 
 unless DB.table_exists? (:batch_assignments)

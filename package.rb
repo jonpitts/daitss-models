@@ -43,7 +43,7 @@ class Package < Sequel::Model(:packages)
   many_to_one :project
 
   one_to_many :batch_assignments
-  many_to_many :batches #has n, :through => :batch_assignments
+  many_to_many :batches, :join_table=>:batch_assignments #has n, :through => :batch_assignments
 
 
   LEGACY_EVENTS = [

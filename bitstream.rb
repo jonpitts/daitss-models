@@ -13,12 +13,12 @@ class Bitstream < Sequel::Model(:bitstreams)
   
   many_to_one :datafile # a bitstream is belong to a datafile
 
-  many_to_many :documents #:constraint => :destroy
-  many_to_many :texts # :constraint => :destroy
-  many_to_many :audios # :constraint => :destroy
-  many_to_many :images # :constraint => :destroy
+  one_to_many :documents #:constraint => :destroy
+  one_to_many :texts # :constraint => :destroy
+  one_to_many :audios # :constraint => :destroy
+  one_to_many :images # :constraint => :destroy
 
-  many_to_many :object_formats # :constraint => :destroy # a bitstream may have 0-n formats
+  one_to_many :object_formats # :constraint => :destroy # a bitstream may have 0-n formats
 
   def check_errors
     unless self.valid?

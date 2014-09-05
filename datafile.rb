@@ -34,15 +34,15 @@ class Datafile < Sequel::Model(:datafiles)
  
   many_to_one :intentity
 
-  many_to_many :bitstreams # :constraint=>:destroy # a datafile may contain 0-n bitstream(s)
-  many_to_many :datafile_severe_element # :constraint=>:destroy
-  many_to_many :documents # :constraint => :destroy
-  many_to_many :texts # :constraint => :destroy
-  many_to_many :audios # :constraint => :destroy
-  many_to_many :images # :constraint => :destroy
-  many_to_many :message_digest # :constraint => :destroy
-  many_to_many :object_formats # :constraint=>:destroy # a datafile may have 0-n file_formats
-  many_to_many :broken_links # :constraint=>:destroy # if there is missing links in the datafiles (only applies to xml)
+  one_to_many :bitstreams # :constraint=>:destroy # a datafile may contain 0-n bitstream(s)
+  one_to_many :datafile_severe_element # :constraint=>:destroy
+  one_to_many :documents # :constraint => :destroy
+  one_to_many :texts # :constraint => :destroy
+  one_to_many :audios # :constraint => :destroy
+  one_to_many :images # :constraint => :destroy
+  one_to_many :message_digest # :constraint => :destroy
+  one_to_many :object_formats # :constraint=>:destroy # a datafile may have 0-n file_formats
+  one_to_many :broken_links # :constraint=>:destroy # if there is missing links in the datafiles (only applies to xml)
  
   def check_errors
     unless self.valid?
