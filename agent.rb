@@ -5,7 +5,7 @@ unless DB.table_exists? (:agents)
     Text :description
     String :auth_key, :size=>50
     String :salt, :size=>50, :null=>false
-    String :type, :size=>50, :null=>false #Descriminator
+    String :type, :size=>50, :null=>false
     Time :deleted_at #ParanoidDateTime
     foreign_key :account_id, :accounts, :type=>'varchar(50)', :null=>false
     String :first_name, :size=>50
@@ -21,6 +21,7 @@ end
 
 class Agent < Sequel::Model(:agents)
   plugin :validation_helpers
+  plugin :single_table_inheritance, :type #Discriminator in DataMapper
   
   def before_create
     super
