@@ -1,3 +1,5 @@
+RequestStatus = [:enqueued, :released_to_workspace, :cancelled]
+RequestTypes = [:disseminate, :withdraw, :refresh, :peek]
 
 unless DB.table_exists? (:requests)
   DB.create_table :requests do
@@ -15,15 +17,37 @@ unless DB.table_exists? (:requests)
 end
 
 class Request < Sequel::Model(:requests)
-  plugin :bit_fields, :status, [:enqueued, :released_to_workspace, :cancelled]
-  plugin :bit_fields, :type, [:disseminate, :withdraw, :refresh, :peek]
+  plugin :bit_fields, :status, RequestStatus
+  plugin :bit_fields, :type, RequestTypes
   
   def before_create
     super
     self.timestamp = DateTime.now
     self.enqueued = true
   end
-
+  
+  #convenience method to assign multiple status flags
+  def status= args 
+    args = [args] unless args.is_a? Array
+    args.each do |arg|
+      if RequestStatus.include? arg
+        arg = arg.to_s + '='
+        self.send arg, true
+      end
+    end
+  end
+  
+  #convenience method to assign multiple type flags
+  def type= args 
+    args = [args] unless args.is_a? Array
+    args.each do |arg|
+      if RequestType.include? arg
+        arg = arg.to_s + '='
+        self.send arg, true
+      end
+    end
+  end
+  
   # TODO investigate Wip::VALID_TASKS - [:sleep, :ingeset] to have one place for it all
 
   many_to_one :agent
