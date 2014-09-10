@@ -7,7 +7,7 @@ unless DB.table_exists? (:requests)
     Text :note
     DateTime :timestamp, :null=>false
     TrueClass :is_authorized, :null=>false, :default=>true
-    Integer :status, :default=>0, :null=>false #bit_field plugin requires default 0 and null false
+    Integer :status, :default=>1, :null=>false
     Integer :type, :default=>0, :null=>false
     foreign_key :agent_id, :agents, :null=>false, :type=>'varchar(50)'
     index :agent_id, :name=>:index_requests_agent
@@ -17,35 +17,13 @@ unless DB.table_exists? (:requests)
 end
 
 class Request < Sequel::Model(:requests)
-  plugin :bit_fields, :status, RequestStatus
-  plugin :bit_fields, :type, RequestTypes
+  plugin :enum
+  enum :status, RequestStatus
+  enum :type, RequestTypes
   
   def before_create
     super
     self.timestamp = DateTime.now
-    self.enqueued = true
-  end
-  
-  #convenience method to assign multiple status flags
-  def status= args 
-    args = [args] unless args.is_a? Array
-    args.each do |arg|
-      if RequestStatus.include? arg
-        arg = arg.to_s + '='
-        self.send arg, true
-      end
-    end
-  end
-  
-  #convenience method to assign multiple type flags
-  def type= args 
-    args = [args] unless args.is_a? Array
-    args.each do |arg|
-      if RequestType.include? arg
-        arg = arg.to_s + '='
-        self.send arg, true
-      end
-    end
   end
   
   # TODO investigate Wip::VALID_TASKS - [:sleep, :ingeset] to have one place for it all
@@ -54,7 +32,7 @@ class Request < Sequel::Model(:requests)
   many_to_one :package
 
   def cancel
-    self.canceled = true
+    self.status = :cancelled
     self.save
   end
 
