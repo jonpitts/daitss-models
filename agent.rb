@@ -1,3 +1,4 @@
+Permissions = [:disseminate, :withdraw, :peek, :submit, :report]
 
 unless DB.table_exists? (:agents)
   DB.create_table :agents do
@@ -61,8 +62,23 @@ class Contact < User
   #no Flag equivalent in sequel
   #property :permissions, Flag[:disseminate, :withdraw, :peek, :submit, :report]
   #use sequel-bit-fields plugin instead
-  plugin :bit_fields, :permissions, [:disseminate, :withdraw, :peek, :submit, :report]
+  plugin :bit_fields, :permissions, Permissions
   
+  #convenience method to assign multiple status flags
+  #ex. Contact.permissions = [:disseminate, :submit]
+  def permissions= args 
+    args = [args] unless args.is_a? Array
+    #turn on each flag presented in args
+    Permissions.each do |permission|
+      method = permission.to_s + '='
+      if args.include? permission
+        self.send method, true
+      else
+        self.send method, false
+      end
+    end
+  end
+
 end
 
 class Operator < User

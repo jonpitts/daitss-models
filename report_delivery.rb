@@ -18,4 +18,5 @@ class ReportDelivery < Sequel::Model(:report_deliveries)
   enum :type, [:reject, :ingest, :disseminate]
   
   many_to_one :package
+    
 end
