@@ -43,7 +43,7 @@ class Intentity < Sequel::Model(:intentities)
     # extract and set int entity id
     id = entity.find_first("p2:objectIdentifier/p2:objectIdentifierValue", NAMESPACES)
     raise "cannot find required objectIdentifierValue for the intellectual entity object in the aip descriptor" if id.nil?
-    attribute_set(:id, id.content)
+    self.id = id.content
 
     originalName = entity.find_first("p2:originalName", NAMESPACES)
     attribute_set(:original_name, originalName.content) if originalName
@@ -52,13 +52,13 @@ class Intentity < Sequel::Model(:intentities)
     mods = aip.find_first('//mods:mods', NAMESPACES)
     if mods
       title = mods.find_first("mods:titleInfo/mods:title", NAMESPACES)
-      attribute_set(:title, title.content) if title
+      self.title = title.content if title
       volume = mods.find_first("mods:part/mods:detail[@type = 'volume']/mods:number", NAMESPACES)
-      attribute_set(:volume, volume.content) if volume
+      self.volume = volume.content if volume
       issue = mods.find_first("mods:part/mods:detail[@type = 'issue']/mods:number", NAMESPACES)
-      attribute_set(:issue, issue.content) if issue
+      self.issue = issue.content if issue
       entityid = mods.find_first("mods:identifier[@type = 'entity id']", NAMESPACES)
-      attribute_set(:entity_id, entityid.content) if entityid
+      self.entity_id = entityid.content if entityid
     end
   end
 
