@@ -27,7 +27,8 @@ end
 class Relationship < Sequel::Model(:relationships)
 
  many_to_one :premis_event
-
+ self.raise_on_save_failure = false
+ 
   # validate the relationship type value which is a daitss defined controlled vocabulary
   def validateType
     unless Relationship_Type.include?(@type)

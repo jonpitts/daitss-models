@@ -63,7 +63,7 @@ class Package < Sequel::Model(:packages)
   ]
 
   def self.search(id)
-    self.first(Sequel.like(:id,"%#{id}%"))
+    self.where(Sequel.like(:id,"%#{id}%"))
   end
   
   def normal_events
@@ -124,17 +124,17 @@ class Package < Sequel::Model(:packages)
   end
 
   def rejected?
-    events.where(:name => 'reject').first or events.where(:name => 'daitss v.1 reject').first
+    events.first(:name => 'reject') or events.first(:name => 'daitss v.1 reject')
   end
 
   def migrated_from_pt?
-    events.where(:name => "daitss v.1 provenance").first
+    events.first(:name => "daitss v.1 provenance")
   end
 
   def status
     if self.aip
       'archived'
-    elsif self.events.where(:name => 'reject').first
+    elsif self.events.first(:name => 'reject')
       'rejected'
     elsif self.wip
       'ingesting'
@@ -149,7 +149,7 @@ class Package < Sequel::Model(:packages)
     raise "package not yet ingested" unless status == 'archived'
     return 0 if self.id =~ /^E20(05|06|07|08|09|10|11)/ #return 0 for D1 pacakges
 
-    event_list = self.events.where(:name => "ingest started") + self.events.where(:name => "ingest snafu") + self.events.where(:name => "ingest stopped") + self.events.where(:name => "ingest finished").first
+    event_list = self.events.where(:name => "ingest started") + self.events.where(:name => "ingest snafu") + self.events.where(:name => "ingest stopped") + self.events.first(:name => "ingest finished")
 
     event_list.sort {|a, b| a.timestamp <=> b.timestamp}
 

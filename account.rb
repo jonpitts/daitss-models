@@ -12,7 +12,7 @@ class Account < Sequel::Model(:accounts)
   one_to_many :agents
   
   def default_project
-    p = self.projects.where(:id => Daitss::Archive::DEFAULT_PROJECT_ID).first
+    p = self.projects.first(:id => Daitss::Archive::DEFAULT_PROJECT_ID)
     
     unless p
       p = Project.new :id => Daitss::Archive::DEFAULT_PROJECT_ID, :account => self

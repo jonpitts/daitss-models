@@ -19,8 +19,8 @@ class Intentity < Sequel::Model(:intentities)
 
   many_to_one :package
   one_to_many :datafiles, :constraint=>:destroy
-
-  #before :destroy, :deleteChildren
+  
+  self.raise_on_save_failure = false
 
   def check_errors
     unless self.valid?

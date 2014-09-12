@@ -30,7 +30,9 @@ class Request < Sequel::Model(:requests)
 
   many_to_one :agent
   many_to_one :package
-
+  
+  self.raise_on_save_failure = false
+  
   def cancel
     self.status = :cancelled
     self.save
