@@ -19,7 +19,8 @@ Currently attemping to migrate daitss models from DataMapper to Sequel.
  * gem 'sequel_enum'
    * Behaves like dm-types plugin
  * gem 'sequel-bit_fields'
-   * Behavior is different.
    * Cannot assign multiple flags to property. Instead, each flag is treated as a property.
+     * Forked repository and made modifications to handle multiple flag assignment.
+     * https://github.com/jonpitts/sequel-bit_fields
 
 

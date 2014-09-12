@@ -64,21 +64,6 @@ class Contact < User
   #use sequel-bit-fields plugin instead
   plugin :bit_fields, :permissions, Permissions
   
-  #convenience method to assign multiple status flags
-  #ex. Contact.permissions = [:disseminate, :submit]
-  def permissions= args 
-    args = [args] unless args.is_a? Array
-    #turn on each flag presented in args
-    Permissions.each do |permission|
-      method = permission.to_s + '='
-      if args.include? permission
-        self.send method, true
-      else
-        self.send method, false
-      end
-    end
-  end
-
 end
 
 class Operator < User
